@@ -1,5 +1,6 @@
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
+
 
 public class Fecha {
     private int dia;
@@ -50,13 +51,8 @@ public class Fecha {
         }
     }
 
-    public boolean validarFecha(ArrayList<DiccionarioMes>diccionario){
-        int aux = 0;
-        for (DiccionarioMes elem:diccionario) {
-            if(this.mes==elem.getNumMes()){
-                aux = elem.getNumDia();
-            }
-        }
+    public boolean validarFecha(Map<Integer,Integer> map){
+
         if (this.year > 2099){
             return false;
         }else{
@@ -68,10 +64,10 @@ public class Fecha {
                         if(this.dia > 29){
                             return false;
                         }
-                    }else if(this.dia > aux){
+                    }else if(this.dia > map.get(this.mes)){
                         return false;
                     }
-                }else if(this.dia > aux){
+                }else if(this.dia > map.get(this.mes)){
                     return false;
                 }
             }
@@ -79,17 +75,12 @@ public class Fecha {
         return true;
     }
 
-    public void fechaAprobacion(Fecha inicio, ArrayList<DiccionarioMes>diccionario){
+    public void fechaAprobacion(Fecha inicio, Map<Integer,Integer> map){
         int auxDia = inicio.dia + 7;
         int auxMes = inicio.mes;
         int auxAnyo = inicio.year;
-        int aux = 0;
-        for (DiccionarioMes elem : diccionario) {
-            if(inicio.mes == elem.getNumMes()){
-                aux = elem.getNumDia();
-            }
-        }
-        if(auxDia > aux){
+
+        if(auxDia > map.get(inicio.mes)){
             auxMes++;
             if (auxMes > 12){
                 auxMes = 1;
@@ -97,15 +88,14 @@ public class Fecha {
             }
             if(inicio.validarBisiesto()){
                 if (inicio.mes == 2){
-                    auxDia = auxDia - aux - 1;
+                    auxDia = auxDia - map.get(inicio.mes) - 1;
                 }else {
-                    auxDia = auxDia - aux;
+                    auxDia = auxDia - map.get(inicio.mes);
                 }
             }else {
-                auxDia = auxDia - aux;
+                auxDia = auxDia - map.get(inicio.mes);
             }
         }
-
         this.dia=auxDia;
         this.mes=auxMes;
         this.year=auxAnyo;
